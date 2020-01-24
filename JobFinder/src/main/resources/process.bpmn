@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.5.0">
+  <bpmn:process id="JobFinder" name="JobFinder" isExecutable="true">
+    <bpmn:startEvent id="StartEventProcessStarted" name="Process&#10;started">
+      <bpmn:outgoing>SequenceFlow1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEventProcessEnded" name="Process&#10;ended">
+      <bpmn:incoming>SequenceFlow_1c2ozf8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow1" sourceRef="StartEventProcessStarted" targetRef="randomUserTask" />
+    <bpmn:sequenceFlow id="SequenceFlow_1c2ozf8" sourceRef="randomUserTask" targetRef="EndEventProcessEnded" />
+    <bpmn:userTask id="randomUserTask" name="Random User Task" camunda:assignee="demo" camunda:candidateGroups="camunda-admin">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="test.camunda.delegation.LoggerDelegate" event="start" />
+        <camunda:taskListener class="test.camunda.delegation.LoggerDelegate" event="create" />
+        <camunda:taskListener class="test.camunda.delegation.LoggerDelegate" event="assignment" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1c2ozf8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="timerTaskTerminator" name="1 Day" attachedToRef="randomUserTask">
+      <bpmn:outgoing>SequenceFlow_1b21xdx</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_09yt23j">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P1D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1b21xdx" name="Process Terminated" sourceRef="timerTaskTerminator" targetRef="EndEvent_1vcmxp2" />
+    <bpmn:endEvent id="EndEvent_1vcmxp2">
+      <bpmn:incoming>SequenceFlow_1b21xdx</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_1v7t1p4" />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="JobFinder">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEventProcessStarted">
+        <dc:Bounds x="173" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0fkea3f_di" bpmnElement="EndEventProcessEnded">
+        <dc:Bounds x="556" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="529" y="138" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_08va5r8_di" bpmnElement="SequenceFlow1">
+        <di:waypoint x="209" y="120" />
+        <di:waypoint x="320" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="337.5" y="110" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1c2ozf8_di" bpmnElement="SequenceFlow_1c2ozf8">
+        <di:waypoint x="420" y="120" />
+        <di:waypoint x="556" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_09gs0k3_di" bpmnElement="randomUserTask">
+        <dc:Bounds x="320" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BoundaryEvent_1r6nc4z_di" bpmnElement="timerTaskTerminator">
+        <dc:Bounds x="352" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="385" y="173" width="29" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1b21xdx_di" bpmnElement="SequenceFlow_1b21xdx">
+        <di:waypoint x="370" y="178" />
+        <di:waypoint x="370" y="240" />
+        <di:waypoint x="442" y="240" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="432" y="266" width="55" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1sdpeuu_di" bpmnElement="EndEvent_1vcmxp2">
+        <dc:Bounds x="442" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

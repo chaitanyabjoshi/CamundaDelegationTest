@@ -1,0 +1,6 @@
+target
+JobFinder/target
+JobFinder/.settings
+JobFinder/.classpath
+JobFinder/.project
+.vscode/settings.json
