@@ -152,3 +152,34 @@ Job Details: TimerEntity[repeat=null, id=9, revision=1, duedate=Thu Jan 30 11:19
 Notice again, that both the timer jobs listed, belong to previous process instances. The deployed process on Camunda Docker also exibits the same behaviour. Here, more nuanced analysis can be done using REST API calls. While `LoggerDelegate` logs are behaving weirdly, REST APIs find the right job for right process instance right from beginning. (The logs can be found in directory [Test-Results](Test-Results).) This shows that there is a descrepancy within Camunda REST API and Java API for Job Query.
 
 A possible hypothesis might be a bug in the `SELECT` query for the jobs. Had it been something related to transactions, i.e. `TimerEntity` Job transaction not being committed unless another process instance is started, REST API would also not have shown it. But given the fact the REST-API can show it correct every time, somehting deep in `JobQuery` interface implementation is fishy.
+
+## Update later on 29.01.2020: This is NOT a bug!
+It is an inherent limitation of the design whereby a delegate cannot see the job the process as it is being called in a same transaction where the job was created and not yet committed.
+
+See full discussion and response from a Camunda develeper [here](https://forum.camunda.org/t/java-api-bug-in-jobquery-implementation-in-management-service-api/17662).
+Also, see [workaround solution](https://forum.camunda.org/t/lookup-timer-due-date-for-a-boundary-event-from-task-create-listener/6155/2) for this scenario. The same has been given here for convenience while thanking Philipp Ossler.
+```
+public class MyTaskListener implements TaskListener
+{
+    public void notify(final DelegateTask delegateTask)
+    {
+        TransactionContext transactionContext = Context.getCommandContext().getTransactionContext();
+        transactionContext.addTransactionListener(TransactionState.COMMITTED, new TransactionListener()
+        {
+            public void execute(CommandContext commandContext)
+            {
+                ManagementService managementService = delegateTask.getProcessEngineServices().getManagementService();
+
+                List<Job> timers = managementService.createJobQuery().timers().list();
+
+                for (Job timer : timers)
+                {
+                    Date duedate = timer.getDuedate();
+                    // ...
+                }
+
+            }
+        });
+    }
+}
+```
