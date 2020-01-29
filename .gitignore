@@ -1,5 +1,7 @@
+docker-volumes
 target
 JobFinder/target
+JobFinder/.vscode
 JobFinder/.settings
 JobFinder/.classpath
 JobFinder/.project

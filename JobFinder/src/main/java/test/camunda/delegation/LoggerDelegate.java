@@ -1,6 +1,7 @@
 package test.camunda.delegation;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.camunda.bpm.engine.ManagementService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -14,7 +15,7 @@ import org.camunda.bpm.engine.delegate.TaskListener;
  */
 public class LoggerDelegate implements JavaDelegate, TaskListener {
 
-  private final Logger LOGGER = Logger.getLogger(LoggerDelegate.class.getName());
+  private final Logger LOGGER = LoggerFactory.getLogger(LoggerDelegate.class.getName());
 
   @Override
   public void execute(DelegateExecution execution) throws Exception {

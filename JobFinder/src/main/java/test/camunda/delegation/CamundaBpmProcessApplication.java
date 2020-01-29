@@ -3,6 +3,7 @@ package test.camunda.delegation;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.ibatis.logging.LogFactory;
 import org.camunda.bpm.application.PostDeploy;
 import org.camunda.bpm.application.ProcessApplication;
 import org.camunda.bpm.application.impl.ServletProcessApplication;
@@ -14,7 +15,11 @@ import org.camunda.bpm.engine.ProcessEngine;
 @ProcessApplication
 public class CamundaBpmProcessApplication extends ServletProcessApplication {
 
-  private static final String PROCESS_DEFINITION_KEY = "JobFinder";
+  // private static final String PROCESS_DEFINITION_KEY = "JobFinder";
+
+  static {
+    LogFactory.useSlf4jLogging(); // MyBatis
+  }
 
   /**
    * In a @PostDeploy Hook you can interact with the process engine and access 

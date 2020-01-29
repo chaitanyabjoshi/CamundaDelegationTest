@@ -46,14 +46,20 @@ public class ProcessUnitTest {
   @Test
   @Deployment(resources = "process.bpmn")
   public void testHappyPath() {
-	  ProcessInstance processInstance = processEngine().getRuntimeService().startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
-	  JobQuery query = processEngine().getManagementService().createJobQuery().processInstanceId(processInstance.getId());
-    System.out.println("===========================================================");
-    System.out.println("\nJob Count: " + query.count());
-    for (var job : query.list()) {
-      System.out.println("\nJob Details: " + job.toString());      
-    }
-    System.out.println("===========================================================");
+    // Start instance 1
+    processEngine().getRuntimeService().startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
+    // Start instance 2
+    processEngine().getRuntimeService().startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
+    // Start instance 3
+    processEngine().getRuntimeService().startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
+	  // ProcessInstance processInstance = processEngine().getRuntimeService().startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
+	  // JobQuery query = processEngine().getManagementService().createJobQuery().processInstanceId(processInstance.getId());
+    // System.out.println("===========================================================");
+    // System.out.println("\nJob Count: " + query.count());
+    // for (var job : query.list()) {
+    //   System.out.println("\nJob Details: " + job.toString());      
+    // }
+    // System.out.println("===========================================================");
 	  // Now: Drive the process by API and assert correct behavior by camunda-bpm-assert
   }
 

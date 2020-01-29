@@ -11,9 +11,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1c2ozf8" sourceRef="randomUserTask" targetRef="EndEventProcessEnded" />
     <bpmn:userTask id="randomUserTask" name="Random User Task" camunda:assignee="demo" camunda:candidateGroups="camunda-admin">
       <bpmn:extensionElements>
-        <camunda:executionListener class="test.camunda.delegation.LoggerDelegate" event="start" />
         <camunda:taskListener class="test.camunda.delegation.LoggerDelegate" event="create" />
-        <camunda:taskListener class="test.camunda.delegation.LoggerDelegate" event="assignment" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1c2ozf8</bpmn:outgoing>
