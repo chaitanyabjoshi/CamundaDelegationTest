@@ -1,7 +1,7 @@
 package test.camunda.delegation;
 
-import java.util.HashMap;
-import java.util.Map;
+// import java.util.HashMap;
+// import java.util.Map;
 
 import org.apache.ibatis.logging.LogFactory;
 import org.camunda.bpm.application.PostDeploy;

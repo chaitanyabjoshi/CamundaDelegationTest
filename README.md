@@ -49,3 +49,106 @@ Job Details: TimerEntity[repeat=null, id=9, revision=1, duedate=Sat Jan 25 15:14
 ```
 
 I'm trying to solve this mystery.
+
+## Update 29.01.2020 - Experiment with multiple simultaneous process instances
+
+The mystery has been solved. As of 29.01.2020 and Camunda BPM version 7.13.0-SNAPSHOT there exists a bug in JobQuery API in management service - Java SDK. The details are as follows.
+
+### Test setup
+The experiment was simple but revealed the crack in the implementation. Test was run through both test driver as well as deploying the process application on Camunda Docker container. Camunda version used is 7.13.0-SNAPSHOT.
+
+Instead of starting one process instance, 3 process instances were started one after another and were kept open simultaneously. Process was simplified to keep the LoggerDelegate attached only to 'CREATE' event of the 'Random User Task' and all other attachments were removed in order to keep the logs readable. Also, job query in the unit test driver was removed.
+
+### Test results
+The results reveal curious behaviour of Java Management (JobQuery) API.
+
+The [test driver log](Test-Results/JobFinder%20-%20Test%20Driver%20Log.txt) consists database log as well as `LoggerDelegate` log statements. Similar to previous behaviour the log shows 0 jobs for process ID and 0 total jobs after starting first instance.
+
+```
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION:
+
+LoggerDelegate::notify invoked by processDefinitionId=JobFinder:1:3, activtyId=randomUserTask, activtyName='Random User Task', processInstanceId=5, businessKey=null, executionId=7
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION: Current Event: create
+11:19:39.696 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13005 Starting command -------------------- JobQueryImpl ----------------------
+11:19:39.697 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13010 reusing existing command context
+11:19:39.709 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - ==>  Preparing: select count(distinct RES.ID_ ) from ACT_RU_JOB RES WHERE RES.PROCESS_INSTANCE_ID_ = ?
+11:19:39.710 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - ==> Parameters: 5(String)
+11:19:39.713 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - <==      Total: 1
+11:19:39.713 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13006 Finishing command -------------------- JobQueryImpl ----------------------
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION: How many jobs are there for current process instance? 0
+11:19:39.717 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13005 Starting command -------------------- JobQueryImpl ----------------------
+11:19:39.717 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13010 reusing existing command context
+11:19:39.719 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - ==>  Preparing: select count(distinct RES.ID_ ) from ACT_RU_JOB RES
+11:19:39.720 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - ==> Parameters:
+11:19:39.720 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - <==      Total: 1
+11:19:39.721 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13006 Finishing command -------------------- JobQueryImpl ----------------------
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION: How many jobs are there in total? 0
+11:19:39.723 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13005 Starting command -------------------- JobQueryImpl ----------------------
+11:19:39.723 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13010 reusing existing command context
+11:19:39.725 [main] DEBUG o.c.b.e.i.p.e.J.selectJobByQueryCriteria - ==>  Preparing: select distinct RES.* from ACT_RU_JOB RES order by RES.ID_ asc LIMIT ? OFFSET ?
+11:19:39.727 [main] DEBUG o.c.b.e.i.p.e.J.selectJobByQueryCriteria - ==> Parameters: 2147483647(Integer), 0(Integer)
+11:19:39.727 [main] DEBUG o.c.b.e.i.p.e.J.selectJobByQueryCriteria - <==      Total: 0
+11:19:39.728 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13006 Finishing command -------------------- JobQueryImpl ----------------------
+11:19:39.730 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13011 closing existing command context
+```
+Only notable thing here is the process instance ID `5` of the process 'JobFinder'. The reason will be explained shortly.
+
+After starting the second instance, things got interesting. This time the total jobs for the process instance were still 0 but total jobs in general were being shown as 1.
+```
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION:
+
+LoggerDelegate::notify invoked by processDefinitionId=JobFinder:1:3, activtyId=randomUserTask, activtyName='Random User Task', processInstanceId=15, businessKey=null, executionId=17
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION: Current Event: create
+11:19:39.859 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13005 Starting command -------------------- JobQueryImpl ----------------------
+11:19:39.859 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13010 reusing existing command context
+11:19:39.861 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - ==>  Preparing: select count(distinct RES.ID_ ) from ACT_RU_JOB RES WHERE RES.PROCESS_INSTANCE_ID_ = ?
+11:19:39.864 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - ==> Parameters: 15(String)
+11:19:39.865 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - <==      Total: 1
+11:19:39.866 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13006 Finishing command -------------------- JobQueryImpl ----------------------
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION: How many jobs are there for current process instance? 0
+11:19:39.867 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13005 Starting command -------------------- JobQueryImpl ----------------------
+11:19:39.867 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13010 reusing existing command context
+11:19:39.869 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - ==>  Preparing: select count(distinct RES.ID_ ) from ACT_RU_JOB RES
+11:19:39.870 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - ==> Parameters:
+11:19:39.872 [main] DEBUG o.c.b.e.i.p.e.J.selectJobCountByQueryCriteria - <==      Total: 1
+11:19:39.872 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13006 Finishing command -------------------- JobQueryImpl ----------------------
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION: How many jobs are there in total? 1
+11:19:39.874 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13005 Starting command -------------------- JobQueryImpl ----------------------
+11:19:39.874 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13010 reusing existing command context
+11:19:39.877 [main] DEBUG o.c.b.e.i.p.e.J.selectJobByQueryCriteria - ==>  Preparing: select distinct RES.* from ACT_RU_JOB RES order by RES.ID_ asc LIMIT ? OFFSET ?
+11:19:39.878 [main] DEBUG o.c.b.e.i.p.e.J.selectJobByQueryCriteria - ==> Parameters: 2147483647(Integer), 0(Integer)
+11:19:39.881 [main] DEBUG o.c.b.e.i.p.e.J.selectJobByQueryCriteria - <==      Total: 1
+11:19:39.881 [main] DEBUG org.camunda.bpm.engine.cmd - ENGINE-13006 Finishing command -------------------- JobQueryImpl ----------------------
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION:
+Job Details: TimerEntity[repeat=null, id=9, revision=1, duedate=Thu Jan 30 11:19:39 CET 2020, repeatOffset=0, lockOwner=null, lockExpirationTime=null, executionId=7, processInstanceId=5, isExclusive=true, retries=3, jobHandlerType=timer-transition, jobHandlerConfiguration=timerTaskTerminator, exceptionByteArray=null, exceptionByteArrayId=null, exceptionMessage=null, deploymentId=1]
+``` 
+Now, all attention must be paid. Here, the querying process instance ID is `15` (see in the very beginning of the excerpt, `processInstanceId=15`) but the job details for the `TimerEntity` found under all jobs belonged to process instance ID `5` (in the end) which belonged to the previous process instance.
+
+This behaviour continuous itself after starting the third instance and log shows `2` jobs in total and no jobs for current process instance.
+```
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION:
+
+LoggerDelegate::notify invoked by processDefinitionId=JobFinder:1:3, activtyId=randomUserTask, activtyName='Random User Task', processInstanceId=25, businessKey=null, executionId=27
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION: Current Event: create
+...
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION:
+Job Details: TimerEntity[repeat=null, id=19, revision=1, duedate=Thu Jan 30 11:19:39 CET 2020, repeatOffset=0, lockOwner=null, lockExpirationTime=null, executionId=17, processInstanceId=15, isExclusive=true, retries=3, jobHandlerType=timer-transition, jobHandlerConfiguration=timerTaskTerminator, exceptionByteArray=null, exceptionByteArrayId=null, exceptionMessage=null, deploymentId=1]
+Jan. 29, 2020 11:19:39 VORM. test.camunda.delegation.LoggerDelegate notify
+INFORMATION:
+Job Details: TimerEntity[repeat=null, id=9, revision=1, duedate=Thu Jan 30 11:19:39 CET 2020, repeatOffset=0, lockOwner=null, lockExpirationTime=null, executionId=7, processInstanceId=5, isExclusive=true, retries=3, jobHandlerType=timer-transition, jobHandlerConfiguration=timerTaskTerminator, exceptionByteArray=null, exceptionByteArrayId=null, exceptionMessage=null, deploymentId=1]
+```
+Notice again, that both the timer jobs listed, belong to previous process instances. The deployed process on Camunda Docker also exibits the same behaviour. Here, more nuanced analysis can be done using REST API calls. While `LoggerDelegate` logs are behaving weirdly, REST APIs find the right job for right process instance right from beginning. (The logs can be found in directory [Test-Results](Test-Results).) This shows that there is a descrepancy within Camunda REST API and Java API for Job Query.
+
+A possible hypothesis might be a bug in the `SELECT` query for the jobs. Had it been something related to transactions, i.e. `TimerEntity` Job transaction not being committed unless another process instance is started, REST API would also not have shown it. But given the fact the REST-API can show it correct every time, somehting deep in `JobQuery` interface implementation is fishy.
