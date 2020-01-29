@@ -1,0 +1,30 @@
+13:10:23.471 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - 
+
+LoggerDelegate::notify invoked by processDefinitionId=JobFinder:1:777c7a9e-4298-11ea-a329-0242ac110002, activtyId=randomUserTask, activtyName='Random User Task', processInstanceId=b56b46b3-4298-11ea-a329-0242ac110002, businessKey=290120201410, executionId=b56c3115-4298-11ea-a329-0242ac110002
+13:10:23.476 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - Current Event: create
+13:10:23.489 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - How many jobs are there for current process instance? 0
+13:10:23.510 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - How many jobs are there in total? 1
+13:10:23.513 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - 
+Job Details: EverLivingJobEntity[id=73e83046-4298-11ea-a329-0242ac110002, revision=7, duedate=Wed Jan 29 13:10:04 UTC 2020, lockOwner=null, lockExpirationTime=null, executionId=null, processInstanceId=null, isExclusive=true, retries=3, jobHandlerType=history-cleanup, jobHandlerConfiguration={"countEmptyRuns":3,"immediatelyDue":false,"minuteFrom":0,"minuteTo":59}, exceptionByteArray=null, exceptionByteArrayId=null, exceptionMessage=null, deploymentId=null]
+13:16:05.114 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - 
+
+LoggerDelegate::notify invoked by processDefinitionId=JobFinder:1:777c7a9e-4298-11ea-a329-0242ac110002, activtyId=randomUserTask, activtyName='Random User Task', processInstanceId=8110e9b7-4299-11ea-a329-0242ac110002, businessKey=290120201416, executionId=811110c9-4299-11ea-a329-0242ac110002
+13:16:05.115 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - Current Event: create
+13:16:05.116 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - How many jobs are there for current process instance? 0
+13:16:05.118 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - How many jobs are there in total? 2
+13:16:05.120 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - 
+Job Details: EverLivingJobEntity[id=73e83046-4298-11ea-a329-0242ac110002, revision=11, duedate=Wed Jan 29 13:15:34 UTC 2020, lockOwner=null, lockExpirationTime=null, executionId=null, processInstanceId=null, isExclusive=true, retries=3, jobHandlerType=history-cleanup, jobHandlerConfiguration={"countEmptyRuns":5,"immediatelyDue":false,"minuteFrom":0,"minuteTo":59}, exceptionByteArray=null, exceptionByteArrayId=null, exceptionMessage=null, deploymentId=null]
+13:16:05.121 [http-nio-8080-exec-2] INFO  t.camunda.delegation.LoggerDelegate - 
+Job Details: TimerEntity[repeat=null, id=b56e2ce7-4298-11ea-a329-0242ac110002, revision=1, duedate=Thu Jan 30 13:10:23 UTC 2020, repeatOffset=0, lockOwner=null, lockExpirationTime=null, executionId=b56c3115-4298-11ea-a329-0242ac110002, processInstanceId=b56b46b3-4298-11ea-a329-0242ac110002, isExclusive=true, retries=3, jobHandlerType=timer-transition, jobHandlerConfiguration=timerTaskTerminator, exceptionByteArray=null, exceptionByteArrayId=null, exceptionMessage=null, deploymentId=775df61c-4298-11ea-a329-0242ac110002]
+13:19:13.979 [http-nio-8080-exec-8] INFO  t.camunda.delegation.LoggerDelegate - 
+
+LoggerDelegate::notify invoked by processDefinitionId=JobFinder:1:777c7a9e-4298-11ea-a329-0242ac110002, activtyId=randomUserTask, activtyName='Random User Task', processInstanceId=f1a43027-4299-11ea-a329-0242ac110002, businessKey=290120201419, executionId=f1a45739-4299-11ea-a329-0242ac110002
+13:19:13.982 [http-nio-8080-exec-8] INFO  t.camunda.delegation.LoggerDelegate - Current Event: create
+13:19:13.985 [http-nio-8080-exec-8] INFO  t.camunda.delegation.LoggerDelegate - How many jobs are there for current process instance? 0
+13:19:13.987 [http-nio-8080-exec-8] INFO  t.camunda.delegation.LoggerDelegate - How many jobs are there in total? 3
+13:19:13.991 [http-nio-8080-exec-8] INFO  t.camunda.delegation.LoggerDelegate - 
+Job Details: EverLivingJobEntity[id=73e83046-4298-11ea-a329-0242ac110002, revision=13, duedate=Wed Jan 29 13:21:29 UTC 2020, lockOwner=null, lockExpirationTime=null, executionId=null, processInstanceId=null, isExclusive=true, retries=3, jobHandlerType=history-cleanup, jobHandlerConfiguration={"countEmptyRuns":6,"immediatelyDue":false,"minuteFrom":0,"minuteTo":59}, exceptionByteArray=null, exceptionByteArrayId=null, exceptionMessage=null, deploymentId=null]
+13:19:13.992 [http-nio-8080-exec-8] INFO  t.camunda.delegation.LoggerDelegate - 
+Job Details: TimerEntity[repeat=null, id=8112494b-4299-11ea-a329-0242ac110002, revision=1, duedate=Thu Jan 30 13:16:05 UTC 2020, repeatOffset=0, lockOwner=null, lockExpirationTime=null, executionId=811110c9-4299-11ea-a329-0242ac110002, processInstanceId=8110e9b7-4299-11ea-a329-0242ac110002, isExclusive=true, retries=3, jobHandlerType=timer-transition, jobHandlerConfiguration=timerTaskTerminator, exceptionByteArray=null, exceptionByteArrayId=null, exceptionMessage=null, deploymentId=775df61c-4298-11ea-a329-0242ac110002]
+13:19:13.992 [http-nio-8080-exec-8] INFO  t.camunda.delegation.LoggerDelegate - 
+Job Details: TimerEntity[repeat=null, id=b56e2ce7-4298-11ea-a329-0242ac110002, revision=1, duedate=Thu Jan 30 13:10:23 UTC 2020, repeatOffset=0, lockOwner=null, lockExpirationTime=null, executionId=b56c3115-4298-11ea-a329-0242ac110002, processInstanceId=b56b46b3-4298-11ea-a329-0242ac110002, isExclusive=true, retries=3, jobHandlerType=timer-transition, jobHandlerConfiguration=timerTaskTerminator, exceptionByteArray=null, exceptionByteArrayId=null, exceptionMessage=null, deploymentId=775df61c-4298-11ea-a329-0242ac110002]

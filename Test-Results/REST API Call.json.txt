@@ -1,0 +1,57 @@
+http://localhost:8080/engine-rest/job-definition/777ca1af-4298-11ea-a329-0242ac110002
+{
+    "id": "777ca1af-4298-11ea-a329-0242ac110002",
+    "processDefinitionId": "JobFinder:1:777c7a9e-4298-11ea-a329-0242ac110002",
+    "processDefinitionKey": "JobFinder",
+    "jobType": "timer-transition",
+    "jobConfiguration": "DURATION: P1D",
+    "activityId": "timerTaskTerminator",
+    "suspended": false,
+    "overridingJobPriority": null,
+    "tenantId": null
+}
+
+http://localhost:8080/engine-rest/job?processDefinitionKey=JobFinder
+[{
+    "id": "8112494b-4299-11ea-a329-0242ac110002",
+    "jobDefinitionId": "777ca1af-4298-11ea-a329-0242ac110002",
+    "processInstanceId": "8110e9b7-4299-11ea-a329-0242ac110002",
+    "processDefinitionId": "JobFinder:1:777c7a9e-4298-11ea-a329-0242ac110002",
+    "processDefinitionKey": "JobFinder",
+    "executionId": "811110c9-4299-11ea-a329-0242ac110002",
+    "exceptionMessage": null,
+    "retries": 3,
+    "dueDate": "2020-01-30T13:16:05.111+0000",
+    "suspended": false,
+    "priority": 0,
+    "tenantId": null,
+    "createTime": "2020-01-29T13:16:05.111+0000"
+}, {
+    "id": "b56e2ce7-4298-11ea-a329-0242ac110002",
+    "jobDefinitionId": "777ca1af-4298-11ea-a329-0242ac110002",
+    "processInstanceId": "b56b46b3-4298-11ea-a329-0242ac110002",
+    "processDefinitionId": "JobFinder:1:777c7a9e-4298-11ea-a329-0242ac110002",
+    "processDefinitionKey": "JobFinder",
+    "executionId": "b56c3115-4298-11ea-a329-0242ac110002",
+    "exceptionMessage": null,
+    "retries": 3,
+    "dueDate": "2020-01-30T13:10:23.458+0000",
+    "suspended": false,
+    "priority": 0,
+    "tenantId": null,
+    "createTime": "2020-01-29T13:10:23.458+0000"
+}, {
+    "id": "f1a4f37b-4299-11ea-a329-0242ac110002",
+    "jobDefinitionId": "777ca1af-4298-11ea-a329-0242ac110002",
+    "processInstanceId": "f1a43027-4299-11ea-a329-0242ac110002",
+    "processDefinitionId": "JobFinder:1:777c7a9e-4298-11ea-a329-0242ac110002",
+    "processDefinitionKey": "JobFinder",
+    "executionId": "f1a45739-4299-11ea-a329-0242ac110002",
+    "exceptionMessage": null,
+    "retries": 3,
+    "dueDate": "2020-01-30T13:19:13.977+0000",
+    "suspended": false,
+    "priority": 0,
+    "tenantId": null,
+    "createTime": "2020-01-29T13:19:13.977+0000"
+}]
